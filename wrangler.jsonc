@@ -1,0 +1,10 @@
+{
+  // 보물모아 웹사이트 — Cloudflare Worker (정적 자산 + API)
+  "name": "bomulmoa",
+  "main": "worker.js",
+  "compatibility_date": "2026-07-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  }
+}
