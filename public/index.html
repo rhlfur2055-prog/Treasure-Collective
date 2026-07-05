@@ -118,6 +118,13 @@
   .sec-title { font-size: 23px; font-weight: 800; letter-spacing: -0.7px; margin-bottom: 5px; }
   .sec-sub { font-size: 13.5px; color: var(--ink-3); margin-bottom: 22px; }
 
+  .cat-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 800; color: var(--ink); margin: 22px 0 10px;
+  }
+  .cat-label:first-child { margin-top: 0; }
+  .cat-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .cat-label .cnt { font-size: 11px; font-weight: 700; color: var(--gold-deep); }
   .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
   .price-card {
     background: var(--card); border-radius: 16px; padding: 17px 18px;
@@ -228,13 +235,8 @@
       <h2 class="sec-title">오늘의 매입 시세</h2>
       <p class="sec-sub" id="priceUpdated">품목별 kg당 매입가</p>
     </div>
-    <div class="price-grid reveal" id="priceGrid">
-      <div class="price-card"><div class="name">고철</div><div class="value">385 <span class="unit">원/kg</span></div></div>
-      <div class="price-card"><div class="name">구리 (동)</div><div class="value">9,200 <span class="unit">원/kg</span></div></div>
-      <div class="price-card"><div class="name">알루미늄 캔</div><div class="value">1,850 <span class="unit">원/kg</span></div></div>
-      <div class="price-card"><div class="name">폐지 (신문)</div><div class="value">90 <span class="unit">원/kg</span></div></div>
-    </div>
-    <p class="price-note reveal">* 시세는 시장 상황에 따라 매일 변동됩니다. 방문 전 문의로 확인하세요.</p>
+    <div class="reveal" id="priceGroups"></div>
+    <p class="price-note reveal">* 전국 기준 참고 시세로, 지역·물량·선별 상태에 따라 실제 매입가는 달라질 수 있습니다. 방문 전 문의로 확인하세요.</p>
   </section>
 
   <section id="items" style="background:#f3f1ea;">
@@ -312,40 +314,61 @@
 <script>
 /* ── 시세: /api/prices (gomulprice 크롤링, 1시간 캐시) ── */
 const FALLBACK = [
-  { item: "고철", price: 385 },
-  { item: "구리 (동)", price: 9200 },
-  { item: "알루미늄 캔", price: 1850 },
-  { item: "폐지 (신문)", price: 90 },
+  { category: "고철", item: "생철A", price: 485 },
+  { category: "고철", item: "중량A", price: 450 },
+  { category: "고철", item: "중량B", price: 440 },
+  { category: "고철", item: "경량A", price: 410 },
+  { category: "구리", item: "A동(꽈베기)", price: 18800 },
+  { category: "구리", item: "상동", price: 17800 },
+  { category: "구리", item: "파동", price: 16400 },
+  { category: "신주", item: "신주(절봉)", price: 11000 },
+  { category: "신주", item: "신주(주물)", price: 10500 },
+  { category: "스테인리스", item: "스텐304(A)", price: 1800 },
+  { category: "스테인리스", item: "스텐316(A)", price: 3750 },
+  { category: "알루미늄", item: "샤시(A)", price: 3300 },
 ];
+const CAT_ORDER = ["고철", "구리", "신주", "스테인리스", "알루미늄", "폐지", "기타 비철"];
 let PRICE_ITEMS = FALLBACK;
 
 function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
 
 function renderTicker() {
-  const half = PRICE_ITEMS.slice(0, 8).map(it =>
+  const half = PRICE_ITEMS.slice(0, 10).map(it =>
     '<span>' + esc(it.item) + ' <b>' + it.price.toLocaleString("ko-KR") + '원</b>/kg</span>'
   ).join("");
   document.getElementById("tickerTrack").innerHTML = half + half;
 }
 
-function renderGrid() {
-  const grid = document.getElementById("priceGrid");
-  grid.innerHTML = PRICE_ITEMS.slice(0, 6).map(it =>
-    '<div class="price-card"><div class="name">' + esc(it.item) +
-    '</div><div class="value">' + it.price.toLocaleString("ko-KR") +
-    ' <span class="unit">원/kg</span></div></div>'
-  ).join("");
+function renderGroups() {
+  const box = document.getElementById("priceGroups");
+  const byCat = new Map();
+  for (const it of PRICE_ITEMS) {
+    const cat = it.category || "기타 비철";
+    if (!byCat.has(cat)) byCat.set(cat, []);
+    byCat.get(cat).push(it);
+  }
+  const cats = [...CAT_ORDER.filter(c => byCat.has(c)), ...[...byCat.keys()].filter(c => !CAT_ORDER.includes(c))];
+  box.innerHTML = cats.map(cat => {
+    const items = byCat.get(cat);
+    const cards = items.map(it =>
+      '<div class="price-card"><div class="name">' + esc(it.item) +
+      '</div><div class="value">' + it.price.toLocaleString("ko-KR") +
+      ' <span class="unit">원/kg</span></div></div>'
+    ).join("");
+    return '<div class="cat-label">' + esc(cat) + ' <span class="cnt">' + items.length + '품목</span></div>' +
+      '<div class="price-grid">' + cards + '</div>';
+  }).join("");
 }
 
 async function loadPrices() {
-  renderTicker();
+  renderGroups(); renderTicker();
   try {
     const r = await fetch("/api/prices", { headers: { Accept: "application/json" } });
     if (!r.ok) throw 0;
     const j = await r.json();
     if (!j || !Array.isArray(j.items) || !j.items.length) throw 0;
     PRICE_ITEMS = j.items;
-    renderGrid(); renderTicker();
+    renderGroups(); renderTicker();
     if (j.updated) {
       document.getElementById("priceUpdated").textContent =
         "업데이트 " + new Date(j.updated).toLocaleString("ko-KR", { month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });

@@ -56,6 +56,17 @@ function parseKRW(s) {
   return Number.isFinite(n) ? n : 0;
 }
 
+/** 품목명 → 고물상 표준 카테고리 분류 */
+function categorize(item) {
+  if (/생철|중량|경량|잡철|고철/.test(item)) return "고철";
+  if (/신주/.test(item)) return "신주";
+  if (/스텐|스테인/.test(item)) return "스테인리스";
+  if (/샤시|샷시|알루|캔/.test(item)) return "알루미늄";
+  if (/동|구리|꽈베기/.test(item)) return "구리";
+  if (/폐지|신문|박스|파지/.test(item)) return "폐지";
+  return "기타 비철";
+}
+
 /** HTML 태그 제거 */
 function stripTags(html) {
   return html
@@ -96,14 +107,8 @@ async function scrapeGomulPrice() {
     const item = cells[priceIdx - 1];
     if (!item || !/[가-힣]/.test(item) || item.length > 20) continue;
 
-    const first = cells[0];
-    const category = /비철/.test(first) ? "비철"
-      : /고철|철/.test(first) ? "고철"
-      : /생철|중량|경량|고철/.test(item) ? "고철"
-      : "비철";
-
-    out.push({ category, item, price: parseKRW(cells[priceIdx]) });
-    if (out.length >= 20) break;
+    out.push({ category: categorize(item), item, price: parseKRW(cells[priceIdx]) });
+    if (out.length >= 30) break;
   }
   if (!out.length) throw new Error("no rows parsed");
   return out;
