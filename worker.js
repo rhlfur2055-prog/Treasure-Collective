@@ -27,7 +27,7 @@ export default {
 
 /* ── 시세 API ─────────────────────────────────────────── */
 
-const PRICE_CACHE_KEY = "https://bomulmoa.com/__cache/prices-v1";
+const PRICE_CACHE_KEY = "https://bomulmoa.com/__cache/prices-v2";
 const PRICE_TTL = 3600; // 1시간
 
 async function handlePrices(request, ctx) {
