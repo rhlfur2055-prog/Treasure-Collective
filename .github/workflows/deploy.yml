@@ -1,0 +1,22 @@
+name: Deploy to Cloudflare Workers
+
+# main에 푸시될 때마다 bomulmoa.com 워커+정적자산 자동 배포
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: 소스 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Cloudflare Workers 배포
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 1d71fa408137ef30960987613da3f96a
+          command: deploy
