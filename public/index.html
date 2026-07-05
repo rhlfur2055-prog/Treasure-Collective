@@ -36,110 +36,172 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 
 <style>
+  :root {
+    --ink: #17150f;
+    --ink-2: #4c4a43;
+    --ink-3: #8f8a80;
+    --paper: #faf9f6;
+    --card: #f3f1ea;
+    --line: #e8e5dc;
+    --gold: #f5c451;
+    --gold-deep: #b8860b;
+    --dark: #17150f;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
     font-family: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
-    background: #f6f5f2;
-    color: #2c2c2a;
-    line-height: 1.6;
+    background: #ecebe6;
+    color: var(--ink);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 520px; margin: 0 auto; background: #fff; min-height: 100vh; }
+  .wrap { max-width: 520px; margin: 0 auto; background: var(--paper); min-height: 100vh; box-shadow: 0 0 60px rgba(23,21,15,.08); }
 
   header {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 14px 20px;
-    position: sticky; top: 0; background: rgba(255,255,255,.92);
-    backdrop-filter: blur(8px); z-index: 10;
-    border-bottom: 1px solid #eee;
+    padding: 16px 22px;
+    position: sticky; top: 0; background: rgba(250,249,246,.88);
+    backdrop-filter: blur(12px); z-index: 10;
+    border-bottom: 1px solid var(--line);
   }
-  header .logo { font-size: 17px; font-weight: 700; letter-spacing: -0.5px; }
+  header .logo { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+  header .logo em { font-style: normal; color: var(--gold-deep); }
   header nav a {
-    font-size: 13px; color: #666; text-decoration: none; margin-left: 14px;
+    font-size: 13px; font-weight: 600; color: var(--ink-2); text-decoration: none; margin-left: 16px;
+    transition: color .2s;
   }
+  header nav a:hover { color: var(--ink); }
 
   .hero { position: relative; overflow: hidden; }
-  .hero video { display: block; width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+  .hero video {
+    display: block; width: 100%; aspect-ratio: 1/1; object-fit: cover;
+    animation: heroZoom 18s ease-in-out infinite alternate;
+  }
+  @keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.06); } }
   .hero .overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(20,18,14,.78) 0%, rgba(20,18,14,.15) 45%, rgba(20,18,14,0) 70%);
+    background: linear-gradient(to top, rgba(23,21,15,.85) 0%, rgba(23,21,15,.2) 48%, rgba(23,21,15,.05) 72%);
     display: flex; flex-direction: column; justify-content: flex-end;
-    padding: 24px 22px 30px;
+    padding: 24px 24px 66px;
+  }
+  .hero .eyebrow {
+    color: var(--gold); font-size: 13px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; margin-bottom: 10px;
   }
   .hero h1 {
-    color: #fff; font-size: 26px; font-weight: 800; letter-spacing: -0.8px;
-    line-height: 1.35; text-shadow: 0 1px 8px rgba(0,0,0,.4);
+    color: #fff; font-size: 30px; font-weight: 800; letter-spacing: -1px;
+    line-height: 1.32; text-shadow: 0 2px 14px rgba(0,0,0,.35);
   }
-  .hero p { color: rgba(255,255,255,.85); font-size: 14px; margin: 8px 0 18px; }
+  .hero p { color: rgba(255,255,255,.8); font-size: 14.5px; margin: 10px 0 20px; }
   .hero .cta {
-    display: inline-block; align-self: flex-start;
-    background: #fff; color: #2c2c2a; font-size: 15px; font-weight: 700;
-    padding: 12px 26px; border-radius: 10px; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
+    background: var(--gold); color: var(--ink); font-size: 15px; font-weight: 800;
+    padding: 13px 28px; border-radius: 12px; text-decoration: none;
+    box-shadow: 0 8px 26px rgba(245,196,81,.35);
+    transition: transform .2s;
   }
+  .hero .cta:hover { transform: translateY(-2px); }
 
-  section { padding: 34px 22px; }
-  .sec-title { font-size: 20px; font-weight: 800; letter-spacing: -0.6px; margin-bottom: 4px; }
-  .sec-sub { font-size: 13px; color: #888; margin-bottom: 18px; }
+  .ticker {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(23,21,15,.92); overflow: hidden; padding: 10px 0;
+    border-top: 1px solid rgba(245,196,81,.35);
+  }
+  .ticker-track { display: flex; gap: 34px; white-space: nowrap; animation: ticker 26s linear infinite; width: max-content; }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .ticker span { font-size: 13px; color: #d9d5cd; font-weight: 600; }
+  .ticker b { color: var(--gold); font-weight: 800; }
 
-  .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .price-card { background: #f6f5f2; border-radius: 12px; padding: 14px 16px; }
-  .price-card .name { font-size: 13px; color: #777; }
-  .price-card .value { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-top: 2px; }
-  .price-card .unit { font-size: 12px; font-weight: 400; color: #999; }
-  .price-note { font-size: 11px; color: #aaa; margin-top: 12px; }
+  section { padding: 44px 24px; }
+  .overline { font-size: 12px; font-weight: 800; letter-spacing: 3px; color: var(--gold-deep); text-transform: uppercase; margin-bottom: 8px; }
+  .sec-title { font-size: 23px; font-weight: 800; letter-spacing: -0.7px; margin-bottom: 5px; }
+  .sec-sub { font-size: 13.5px; color: var(--ink-3); margin-bottom: 22px; }
 
-  .service-video { border-radius: 14px; overflow: hidden; margin-bottom: 20px; }
+  .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  .price-card {
+    background: var(--card); border-radius: 16px; padding: 17px 18px;
+    border: 1px solid var(--line); transition: transform .2s, box-shadow .2s;
+  }
+  .price-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(23,21,15,.08); }
+  .price-card .name { font-size: 13px; font-weight: 600; color: var(--ink-3); }
+  .price-card .value { font-size: 21px; font-weight: 800; letter-spacing: -0.5px; margin-top: 3px; }
+  .price-card .unit { font-size: 12px; font-weight: 500; color: var(--ink-3); }
+  .price-note { font-size: 11.5px; color: var(--ink-3); margin-top: 14px; }
+
+  .service-video { border-radius: 18px; overflow: hidden; margin-bottom: 22px; box-shadow: 0 14px 34px rgba(23,21,15,.12); }
   .service-video video { display: block; width: 100%; aspect-ratio: 1/1; object-fit: cover; }
 
-  .item-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .item-chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
   .item-chips span {
-    background: #f6f5f2; border-radius: 20px; padding: 8px 16px;
-    font-size: 13px; font-weight: 600; color: #555;
+    background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 9px 18px;
+    font-size: 13px; font-weight: 700; color: var(--ink-2);
   }
 
-  .service-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid #f0efec; }
+  .service-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
   .service-item:last-child { border-bottom: none; }
   .service-item .num {
-    flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%;
-    background: #2c2c2a; color: #fff; font-size: 14px; font-weight: 700;
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+    background: var(--ink); color: var(--gold); font-size: 14px; font-weight: 800;
     display: flex; align-items: center; justify-content: center;
   }
-  .service-item h3 { font-size: 15px; font-weight: 700; }
-  .service-item p { font-size: 13px; color: #777; }
+  .service-item h3 { font-size: 15.5px; font-weight: 800; letter-spacing: -0.3px; }
+  .service-item p { font-size: 13.5px; color: var(--ink-2); margin-top: 2px; }
 
   .partner-banner {
-    display: block; margin: 0 22px 34px; padding: 16px 18px;
-    background: #eef3ee; border-radius: 12px; text-decoration: none;
+    display: block; margin: 0 24px 44px; padding: 20px 22px;
+    background: var(--ink); border-radius: 16px; text-decoration: none;
+    position: relative; overflow: hidden;
+    transition: transform .2s;
   }
-  .partner-banner strong { display: block; font-size: 14px; color: #2c5232; font-weight: 700; }
-  .partner-banner span { font-size: 12px; color: #5a7d64; }
+  .partner-banner:hover { transform: translateY(-2px); }
+  .partner-banner::after {
+    content: "→"; position: absolute; right: 22px; top: 50%; transform: translateY(-50%);
+    color: var(--gold); font-size: 22px; font-weight: 800;
+  }
+  .partner-banner strong { display: block; font-size: 15px; color: #fff; font-weight: 800; }
+  .partner-banner span { font-size: 12.5px; color: var(--gold); }
 
-  .contact { background: #2c2c2a; color: #fff; }
+  .contact { background: var(--ink); color: #fff; }
+  .contact .overline { color: var(--gold); }
   .contact .sec-title { color: #fff; }
-  .contact .sec-sub { color: #999; }
-  .contact form { display: flex; flex-direction: column; gap: 10px; }
+  .contact .sec-sub { color: #8f8a80; }
+  .contact form { display: flex; flex-direction: column; gap: 11px; }
   .contact input, .contact textarea {
-    width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid #4a4a46;
-    background: #3a3a37; color: #fff; font-size: 14px; font-family: inherit;
+    width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid #3b382f;
+    background: #24211a; color: #fff; font-size: 14px; font-family: inherit;
+    transition: border-color .2s;
   }
-  .contact input::placeholder, .contact textarea::placeholder { color: #999; }
-  .contact textarea { min-height: 90px; resize: vertical; }
+  .contact input:focus, .contact textarea:focus { outline: none; border-color: var(--gold); }
+  .contact input::placeholder, .contact textarea::placeholder { color: #7a766c; }
+  .contact textarea { min-height: 96px; resize: vertical; }
   .contact button {
-    padding: 13px 0; border-radius: 10px; border: none; cursor: pointer;
-    background: #fff; color: #2c2c2a; font-size: 15px; font-weight: 700; font-family: inherit;
+    padding: 15px 0; border-radius: 12px; border: none; cursor: pointer;
+    background: var(--gold); color: var(--ink); font-size: 15px; font-weight: 800; font-family: inherit;
+    transition: transform .2s;
   }
+  .contact button:hover { transform: translateY(-1px); }
   .form-msg { font-size: 13px; min-height: 20px; }
   .form-msg.ok { color: #8fd19e; }
   .form-msg.err { color: #f1948a; }
 
-  footer { padding: 22px; text-align: center; font-size: 11px; color: #aaa; background: #f6f5f2; }
-  footer a { color: #888; }
+  footer { padding: 26px 24px; text-align: center; font-size: 11.5px; color: var(--ink-3); background: var(--card); }
+  footer a { color: var(--gold-deep); font-weight: 600; }
+
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.on { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .hero video { animation: none; }
+    .ticker-track { animation-duration: 60s; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <header>
-    <span class="logo">보물모아</span>
+    <span class="logo">보물<em>모아</em></span>
     <nav>
       <a href="#price">시세</a>
       <a href="#service">진행 방법</a>
@@ -152,33 +214,41 @@
       <source src="/assets/hero.mp4" type="video/mp4">
     </video>
     <div class="overlay">
+      <div class="eyebrow">Bomulmoa</div>
       <h1>고철, 제값 받고 파는<br>가장 쉬운 방법</h1>
       <p>동네 고물상 네트워크와 오늘의 시세를 한 곳에서</p>
       <a class="cta" href="#price">오늘 시세 확인하기</a>
     </div>
+    <div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
   </div>
 
   <section id="price">
-    <h2 class="sec-title">오늘의 매입 시세</h2>
-    <p class="sec-sub" id="priceUpdated">품목별 kg당 매입가</p>
-    <div class="price-grid" id="priceGrid">
+    <div class="reveal">
+      <p class="overline">Price</p>
+      <h2 class="sec-title">오늘의 매입 시세</h2>
+      <p class="sec-sub" id="priceUpdated">품목별 kg당 매입가</p>
+    </div>
+    <div class="price-grid reveal" id="priceGrid">
       <div class="price-card"><div class="name">고철</div><div class="value">385 <span class="unit">원/kg</span></div></div>
       <div class="price-card"><div class="name">구리 (동)</div><div class="value">9,200 <span class="unit">원/kg</span></div></div>
       <div class="price-card"><div class="name">알루미늄 캔</div><div class="value">1,850 <span class="unit">원/kg</span></div></div>
       <div class="price-card"><div class="name">폐지 (신문)</div><div class="value">90 <span class="unit">원/kg</span></div></div>
     </div>
-    <p class="price-note">* 시세는 시장 상황에 따라 매일 변동됩니다. 방문 전 문의로 확인하세요.</p>
+    <p class="price-note reveal">* 시세는 시장 상황에 따라 매일 변동됩니다. 방문 전 문의로 확인하세요.</p>
   </section>
 
-  <section id="items">
-    <h2 class="sec-title">이런 것들, 다 삽니다</h2>
-    <p class="sec-sub">소량이든 대량이든 무게대로 정직하게</p>
-    <div class="service-video">
+  <section id="items" style="background:#f3f1ea;">
+    <div class="reveal">
+      <p class="overline">Items</p>
+      <h2 class="sec-title">이런 것들, 다 삽니다</h2>
+      <p class="sec-sub">소량이든 대량이든 무게대로 정직하게</p>
+    </div>
+    <div class="service-video reveal">
       <video autoplay muted loop playsinline poster="/assets/yard-poster.jpg">
         <source src="/assets/yard.mp4" type="video/mp4">
       </video>
     </div>
-    <div class="item-chips">
+    <div class="item-chips reveal">
       <span>고철 · 잡철</span>
       <span>구리 · 비철금속</span>
       <span>폐지 · 박스</span>
@@ -188,37 +258,43 @@
     </div>
   </section>
 
-  <section id="service" style="background:#f6f5f2;">
-    <h2 class="sec-title">이렇게 진행됩니다</h2>
-    <p class="sec-sub">가져오시면 바로 계량, 바로 정산</p>
-    <div class="service-video">
+  <section id="service">
+    <div class="reveal">
+      <p class="overline">Process</p>
+      <h2 class="sec-title">이렇게 진행됩니다</h2>
+      <p class="sec-sub">가져오시면 바로 계량, 바로 정산</p>
+    </div>
+    <div class="service-video reveal">
       <video autoplay muted loop playsinline poster="/assets/weighing-poster.jpg">
         <source src="/assets/weighing.mp4" type="video/mp4">
       </video>
     </div>
-    <div class="service-item">
+    <div class="service-item reveal">
       <div class="num">1</div>
       <div><h3>가져오기 또는 출장 수거</h3><p>소량은 직접 방문, 대량·무거운 고철은 문의 주시면 트럭으로 수거합니다.</p></div>
     </div>
-    <div class="service-item">
+    <div class="service-item reveal">
       <div class="num">2</div>
       <div><h3>계량기에서 바로 무게 확인</h3><p>트럭째 계근대에 올라가면 키로수가 바로 표시됩니다. 눈앞에서 투명하게.</p></div>
     </div>
-    <div class="service-item">
+    <div class="service-item reveal">
       <div class="num">3</div>
       <div><h3>오늘 시세로 현장 정산</h3><p>당일 시세 기준으로 그 자리에서 바로 정산해 드립니다.</p></div>
     </div>
   </section>
 
-  <a class="partner-banner" href="/partner.html">
+  <a class="partner-banner reveal" href="/partner.html">
     <strong>고물상 사장님이신가요?</strong>
-    <span>무인 매입 키오스크 파트너 모집 중 — 자세히 보기 →</span>
+    <span>무인 매입 키오스크 파트너 모집 중</span>
   </a>
 
   <section id="contact" class="contact">
-    <h2 class="sec-title">문의하기</h2>
-    <p class="sec-sub">대량 매입 · 출장 수거 · 시세 문의 — 남겨주시면 바로 연락드립니다</p>
-    <form id="contactForm">
+    <div class="reveal">
+      <p class="overline">Contact</p>
+      <h2 class="sec-title">문의하기</h2>
+      <p class="sec-sub">대량 매입 · 출장 수거 · 시세 문의 — 남겨주시면 바로 연락드립니다</p>
+    </div>
+    <form id="contactForm" class="reveal">
       <input name="name" placeholder="성함 또는 상호 *">
       <input name="phone" placeholder="연락처 *">
       <textarea name="message" placeholder="문의 내용 * (예: 공장 철거 고철 2톤 수거 문의)"></textarea>
@@ -235,30 +311,54 @@
 
 <script>
 /* ── 시세: /api/prices (gomulprice 크롤링, 1시간 캐시) ── */
-const FALLBACK_NAMES = { "고철": "고철", "구리": "구리 (동)", "알루미늄": "알루미늄", "폐지": "폐지" };
+const FALLBACK = [
+  { item: "고철", price: 385 },
+  { item: "구리 (동)", price: 9200 },
+  { item: "알루미늄 캔", price: 1850 },
+  { item: "폐지 (신문)", price: 90 },
+];
+let PRICE_ITEMS = FALLBACK;
+
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+function renderTicker() {
+  const half = PRICE_ITEMS.slice(0, 8).map(it =>
+    '<span>' + esc(it.item) + ' <b>' + it.price.toLocaleString("ko-KR") + '원</b>/kg</span>'
+  ).join("");
+  document.getElementById("tickerTrack").innerHTML = half + half;
+}
+
+function renderGrid() {
+  const grid = document.getElementById("priceGrid");
+  grid.innerHTML = PRICE_ITEMS.slice(0, 6).map(it =>
+    '<div class="price-card"><div class="name">' + esc(it.item) +
+    '</div><div class="value">' + it.price.toLocaleString("ko-KR") +
+    ' <span class="unit">원/kg</span></div></div>'
+  ).join("");
+}
 
 async function loadPrices() {
+  renderTicker();
   try {
     const r = await fetch("/api/prices", { headers: { Accept: "application/json" } });
     if (!r.ok) throw 0;
     const j = await r.json();
     if (!j || !Array.isArray(j.items) || !j.items.length) throw 0;
-
-    const grid = document.getElementById("priceGrid");
-    grid.innerHTML = j.items.slice(0, 6).map(it =>
-      '<div class="price-card"><div class="name">' + esc(it.item) +
-      '</div><div class="value">' + it.price.toLocaleString("ko-KR") +
-      ' <span class="unit">원/kg</span></div></div>'
-    ).join("");
-
+    PRICE_ITEMS = j.items;
+    renderGrid(); renderTicker();
     if (j.updated) {
       document.getElementById("priceUpdated").textContent =
         "업데이트 " + new Date(j.updated).toLocaleString("ko-KR", { month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
     }
   } catch (_) { /* 실패 시 기본값 유지 */ }
 }
-function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
 loadPrices();
+
+/* ── 스크롤 등장 애니메이션 ── */
+const io = new IntersectionObserver((entries) => {
+  for (const e of entries) if (e.isIntersecting) { e.target.classList.add("on"); io.unobserve(e.target); }
+}, { threshold: 0.12 });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 
 /* ── 문의 폼 → /api/contact → Slack ── */
 const form = document.getElementById("contactForm");
