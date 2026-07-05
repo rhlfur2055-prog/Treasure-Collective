@@ -7,9 +7,7 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS"
-  },
-  "routes": [
-    { "pattern": "bomulmoa.com", "custom_domain": true },
-    { "pattern": "www.bomulmoa.com", "custom_domain": true }
-  ]
+  }
+  // 커스텀 도메인(bomulmoa.com, www)은 Cloudflare 대시보드에서 이미 연결됨.
+  // 배포 토큰에 DNS 권한이 없어 config 관리에서 제외 — 도메인 변경은 대시보드에서.
 }
